@@ -1,6 +1,7 @@
 <script lang="ts">
   import { page } from '$app/state';
   import { goto } from '$app/navigation';
+  import { base } from '$app/paths';
   import { recipeStore } from '$lib/stores/recipes.svelte';
   import { getCategoryEmoji, getCategoryColors } from '$lib/types/recipe';
   import { ArrowLeft, Clock, ChefHat, Heart, Trash2, Users } from 'lucide-svelte';
@@ -12,7 +13,7 @@
   function handleDelete() {
     if (recipe && confirm('Möchtest du dieses Rezept wirklich löschen?')) {
       recipeStore.deleteRecipe(recipe.id);
-      goto('/library');
+      goto(`${base}/library`);
     }
   }
 
@@ -40,7 +41,7 @@
   <div class="py-8 space-y-8">
     <!-- Back nav -->
     <div class="flex items-center justify-between">
-      <a href="/library" class="inline-flex items-center gap-1.5 text-sm text-[#8d7464] dark:text-[#a08878] hover:text-[#f06543] dark:hover:text-[#ffb4a2] transition-colors">
+      <a href="{base}/library" class="inline-flex items-center gap-1.5 text-sm text-[#8d7464] dark:text-[#a08878] hover:text-[#f06543] dark:hover:text-[#ffb4a2] transition-colors">
         <ArrowLeft size={16} />
         Zurück zur Bibliothek
       </a>
@@ -151,6 +152,6 @@
     <div class="text-6xl mb-4">😕</div>
     <h2 class="text-xl font-bold text-[#2d1f15] dark:text-[#fff3e0] mb-2">Rezept nicht gefunden</h2>
     <p class="text-[#8d7464] dark:text-[#a08878] mb-6">Dieses Rezept existiert leider nicht.</p>
-    <a href="/library" class="px-6 py-3 bg-gradient-to-r from-[#f06543] to-[#e8465c] text-white rounded-xl text-sm font-semibold">Zur Bibliothek</a>
+    <a href="{base}/library" class="px-6 py-3 bg-gradient-to-r from-[#f06543] to-[#e8465c] text-white rounded-xl text-sm font-semibold">Zur Bibliothek</a>
   </div>
 {/if}
