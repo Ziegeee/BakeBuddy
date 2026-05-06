@@ -1,4 +1,5 @@
 <script lang="ts">
+  import { base } from '$app/paths';
   import { recipeStore } from '$lib/stores/recipes.svelte';
   import RecipeCard from '$lib/components/RecipeCard.svelte';
   import EmptyState from '$lib/components/EmptyState.svelte';
@@ -30,7 +31,7 @@
     >
       {#snippet action()}
         <a
-          href="/library"
+          href="{base}/library"
           class="px-6 py-3 bg-gradient-to-r from-[#f06543] to-[#e8465c] text-white rounded-xl text-sm font-semibold hover:shadow-lg hover:shadow-[#f06543]/25 transition-all"
         >
           Zur Bibliothek
