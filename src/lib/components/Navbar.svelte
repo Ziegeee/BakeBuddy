@@ -1,5 +1,6 @@
 <script lang="ts">
   import { page } from '$app/state';
+  import { base } from '$app/paths';
   import { themeStore } from '$lib/stores/theme.svelte';
   import { Home, BookOpen, Heart, Plus, Menu, X, Sun, Moon } from 'lucide-svelte';
   import { fly, fade } from 'svelte/transition';
@@ -7,9 +8,9 @@
   let mobileOpen = $state(false);
 
   const navItems = [
-    { path: '/', label: 'Home', icon: Home },
-    { path: '/library', label: 'Bibliothek', icon: BookOpen },
-    { path: '/favorites', label: 'Favoriten', icon: Heart }
+    { path: `${base}/`, label: 'Home', icon: Home },
+    { path: `${base}/library`, label: 'Bibliothek', icon: BookOpen },
+    { path: `${base}/favorites`, label: 'Favoriten', icon: Heart }
   ];
 
   function closeMobile() {
@@ -24,7 +25,7 @@
   <div class="mx-auto max-w-6xl px-4 sm:px-6">
     <div class="flex h-16 items-center justify-between">
       <!-- Logo -->
-      <a href="/" class="flex items-center gap-2 group">
+      <a href="{base}/" class="flex items-center gap-2 group">
         <span class="text-2xl group-hover:scale-110 transition-transform duration-200">🧁</span>
         <span class="text-xl font-bold bg-gradient-to-r from-[#f06543] to-[#e8465c] bg-clip-text text-transparent" style="font-family: 'Playfair Display', serif;">
           Bake Buddy
@@ -63,7 +64,7 @@
 
         <!-- Add Recipe (Desktop) -->
         <a
-          href="/add"
+          href="{base}/add"
           class="hidden md:flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-[#f06543] to-[#e8465c] text-white rounded-xl text-sm font-semibold hover:shadow-lg hover:shadow-[#f06543]/25 transition-all duration-200 hover:scale-[1.02] active:scale-[0.98]"
         >
           <Plus size={18} />
@@ -106,7 +107,7 @@
         </a>
       {/each}
       <a
-        href="/add"
+        href="{base}/add"
         onclick={closeMobile}
         class="flex items-center gap-3 px-4 py-3 bg-gradient-to-r from-[#f06543] to-[#e8465c] text-white rounded-xl text-sm font-semibold"
       >
