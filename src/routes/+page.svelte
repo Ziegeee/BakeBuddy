@@ -1,4 +1,5 @@
 <script lang="ts">
+  import { base } from '$app/paths';
   import { recipeStore } from '$lib/stores/recipes.svelte';
   import RecipeCard from '$lib/components/RecipeCard.svelte';
   import RandomizerCard from '$lib/components/RandomizerCard.svelte';
@@ -37,7 +38,7 @@
         <h2 class="text-2xl font-bold text-[#2d1f15] dark:text-[#fff3e0]" style="font-family: 'Playfair Display', serif;">
           Zuletzt hinzugefügt
         </h2>
-        <a href="/library" class="flex items-center gap-1 text-sm font-semibold text-[#f06543] hover:text-[#d94e2e] transition-colors">
+        <a href="{base}/library" class="flex items-center gap-1 text-sm font-semibold text-[#f06543] hover:text-[#d94e2e] transition-colors">
           Alle ansehen
           <ArrowRight size={16} />
         </a>
