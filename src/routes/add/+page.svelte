@@ -1,4 +1,5 @@
 <script lang="ts">
+  import { base } from '$app/paths';
   import RecipeForm from '$lib/components/RecipeForm.svelte';
   import { ArrowLeft } from 'lucide-svelte';
 </script>
@@ -9,7 +10,7 @@
 
 <div class="py-8 space-y-6">
   <div>
-    <a href="/" class="inline-flex items-center gap-1.5 text-sm text-[#8d7464] dark:text-[#a08878] hover:text-[#f06543] dark:hover:text-[#ffb4a2] transition-colors mb-4">
+    <a href="{base}/" class="inline-flex items-center gap-1.5 text-sm text-[#8d7464] dark:text-[#a08878] hover:text-[#f06543] dark:hover:text-[#ffb4a2] transition-colors mb-4">
       <ArrowLeft size={16} />
       Zurück
     </a>
