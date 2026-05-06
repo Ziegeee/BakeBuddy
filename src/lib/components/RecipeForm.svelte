@@ -1,5 +1,6 @@
 <script lang="ts">
   import { goto } from '$app/navigation';
+  import { base } from '$app/paths';
   import { recipeStore } from '$lib/stores/recipes.svelte';
   import { DIFFICULTIES, getCategoryEmoji } from '$lib/types/recipe';
   import type { Difficulty } from '$lib/types/recipe';
@@ -52,7 +53,7 @@
       image: image || undefined
     });
 
-    goto('/library');
+    goto(`${base}/library`);
   }
 
   const inputClass = 'w-full px-4 py-3 bg-white dark:bg-[#2a1f28] border border-[#f3e8e0] dark:border-[#3d2b35] rounded-xl text-sm text-[#2d1f15] dark:text-[#fff3e0] placeholder-[#b8a08e] dark:placeholder-[#8d7464] focus:outline-none focus:ring-2 focus:ring-[#f06543]/30 focus:border-[#f06543]/50 transition-all';
