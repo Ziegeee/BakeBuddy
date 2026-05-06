@@ -1,4 +1,5 @@
 <script lang="ts">
+  import { base } from '$app/paths';
   import { recipeStore } from '$lib/stores/recipes.svelte';
   import { getCategoryEmoji, getCategoryColors } from '$lib/types/recipe';
   import type { Recipe } from '$lib/types/recipe';
@@ -52,7 +53,7 @@
   <!-- Revealed Recipe Card -->
   {#if showCard && revealedRecipe}
     <div class="mt-8 w-full max-w-md card-flip-in">
-      <a href="/recipe/{revealedRecipe.id}" class="block group">
+      <a href="{base}/recipe/{revealedRecipe.id}" class="block group">
         <div class="bg-white dark:bg-[#2a1f28] rounded-3xl overflow-hidden shadow-xl shadow-black/5 dark:shadow-black/20 border border-[#f3e8e0]/60 dark:border-[#3d2b35]/60 card-hover">
           <!-- Image -->
           <div class="relative h-56 overflow-hidden">
