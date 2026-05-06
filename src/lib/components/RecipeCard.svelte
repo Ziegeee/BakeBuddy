@@ -1,4 +1,5 @@
 <script lang="ts">
+  import { base } from '$app/paths';
   import type { Recipe } from '$lib/types/recipe';
   import { getCategoryEmoji, getCategoryColors } from '$lib/types/recipe';
   import { recipeStore } from '$lib/stores/recipes.svelte';
@@ -16,7 +17,7 @@
   }
 </script>
 
-<a href="/recipe/{recipe.id}" class="block group" transition:fade={{ duration: 250 }}>
+<a href="{base}/recipe/{recipe.id}" class="block group" transition:fade={{ duration: 250 }}>
   <div class="card-hover relative bg-white dark:bg-[#2a1f28] rounded-2xl overflow-hidden shadow-sm border border-[#f3e8e0]/60 dark:border-[#3d2b35]/60">
     <!-- Image / Gradient Placeholder -->
     <div class="relative h-48 overflow-hidden">
