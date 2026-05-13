@@ -2,7 +2,8 @@
   import { page } from '$app/state';
   import { base } from '$app/paths';
   import { themeStore } from '$lib/stores/theme.svelte';
-  import { Home, BookOpen, Heart, Plus, Menu, X, Sun, Moon } from 'lucide-svelte';
+  import { authStore } from '$lib/stores/auth.svelte';
+  import { Home, BookOpen, Heart, Plus, Menu, X, Sun, Moon, User, LogOut } from 'lucide-svelte';
   import { fly, fade } from 'svelte/transition';
 
   let mobileOpen = $state(false);
@@ -71,6 +72,28 @@
           Rezept
         </a>
 
+        <!-- Auth Button (Desktop) -->
+        <div class="hidden md:flex items-center gap-2">
+          {#if authStore.user}
+            <button
+              onclick={() => authStore.logout()}
+              class="flex items-center gap-2 px-4 py-2 rounded-xl text-sm font-medium border border-[#f3e8e0] dark:border-[#3d2b35] text-[#6b5545] dark:text-[#c4a898] hover:bg-[#fff1ee] dark:hover:bg-[#2d1f28] transition-colors"
+              title="Logout"
+            >
+              <LogOut size={18} />
+              Logout
+            </button>
+          {:else}
+            <a
+              href="{base}/auth"
+              class="flex items-center gap-2 px-4 py-2 rounded-xl text-sm font-medium border border-[#f3e8e0] dark:border-[#3d2b35] text-[#6b5545] dark:text-[#c4a898] hover:bg-[#fff1ee] dark:hover:bg-[#2d1f28] transition-colors"
+            >
+              <User size={18} />
+              Login
+            </a>
+          {/if}
+        </div>
+
         <!-- Mobile Menu Button -->
         <button
           onclick={() => mobileOpen = !mobileOpen}
@@ -114,6 +137,26 @@
         <Plus size={20} />
         Neues Rezept
       </a>
+
+      <!-- Mobile Auth -->
+      {#if authStore.user}
+        <button
+          onclick={() => { authStore.logout(); closeMobile(); }}
+          class="flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-medium border border-[#f3e8e0] dark:border-[#3d2b35] text-[#6b5545] dark:text-[#c4a898] hover:bg-[#fff1ee] dark:hover:bg-[#2d1f28] transition-colors w-full text-left"
+        >
+          <LogOut size={20} />
+          Logout
+        </button>
+      {:else}
+        <a
+          href="{base}/auth"
+          onclick={closeMobile}
+          class="flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-medium border border-[#f3e8e0] dark:border-[#3d2b35] text-[#6b5545] dark:text-[#c4a898] hover:bg-[#fff1ee] dark:hover:bg-[#2d1f28] transition-colors"
+        >
+          <User size={20} />
+          Login
+        </a>
+      {/if}
     </div>
   </div>
 {/if}

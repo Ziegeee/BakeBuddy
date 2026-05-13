@@ -2,8 +2,10 @@ import { sampleRecipes } from '$lib/data/sampleRecipes';
 import type { Recipe, Difficulty } from '$lib/types/recipe';
 import { DEFAULT_CATEGORIES } from '$lib/types/recipe';
 import { browser } from '$app/environment';
+import { supabase } from '$lib/supabaseClient';
+import { authStore } from '$lib/stores/auth.svelte';
 
-function loadRecipes(): Recipe[] {
+function loadLocalRecipes(): Recipe[] {
   if (!browser) return sampleRecipes;
   try {
     const stored = localStorage.getItem('bakebuddy-recipes');
@@ -14,9 +16,32 @@ function loadRecipes(): Recipe[] {
 }
 
 class RecipeStore {
-  recipes = $state<Recipe[]>(loadRecipes());
+  recipes = $state<Recipe[]>(loadLocalRecipes());
 
-  /** All categories: defaults + any custom ones from recipes */
+  constructor() {
+    if (browser) {
+      supabase.auth.onAuthStateChange((_event, session) => {
+        if (session?.user) {
+          this.fetchCloudRecipes(session.user.id);
+        } else {
+          this.recipes = loadLocalRecipes();
+        }
+      });
+    }
+  }
+
+  async fetchCloudRecipes(userId: string) {
+    const { data, error } = await supabase
+      .from('recipes')
+      .select('*')
+      .eq('user_id', userId)
+      .order('createdAt', { ascending: false });
+      
+    if (!error && data) {
+      this.recipes = data as Recipe[];
+    }
+  }
+
   get allCategories(): string[] {
     const fromRecipes = new Set(this.recipes.map(r => r.category));
     const all = new Set([...DEFAULT_CATEGORIES, ...fromRecipes]);
@@ -33,39 +58,64 @@ class RecipeStore {
       .slice(0, 6);
   }
 
-  save() {
-    if (browser) {
+  saveLocal() {
+    if (browser && !authStore.user) {
       localStorage.setItem('bakebuddy-recipes', JSON.stringify(this.recipes));
     }
   }
 
-  addRecipe(data: Omit<Recipe, 'id' | 'createdAt' | 'isFavorite'>) {
+  async addRecipe(data: Omit<Recipe, 'id' | 'createdAt' | 'isFavorite'>) {
     const recipe: Recipe = {
       ...data,
       id: Date.now().toString() + Math.random().toString(36).slice(2),
       createdAt: new Date().toISOString(),
       isFavorite: false
     };
+    
     this.recipes = [recipe, ...this.recipes];
-    this.save();
+    
+    if (authStore.user) {
+      await supabase.from('recipes').insert({ ...recipe, user_id: authStore.user.id });
+    } else {
+      this.saveLocal();
+    }
     return recipe;
   }
 
-  updateRecipe(id: string, updates: Partial<Recipe>) {
+  async updateRecipe(id: string, updates: Partial<Recipe>) {
     this.recipes = this.recipes.map(r => r.id === id ? { ...r, ...updates } : r);
-    this.save();
+    
+    if (authStore.user) {
+      await supabase.from('recipes').update(updates).eq('id', id).eq('user_id', authStore.user.id);
+    } else {
+      this.saveLocal();
+    }
   }
 
-  deleteRecipe(id: string) {
+  async deleteRecipe(id: string) {
     this.recipes = this.recipes.filter(r => r.id !== id);
-    this.save();
+    
+    if (authStore.user) {
+      await supabase.from('recipes').delete().eq('id', id).eq('user_id', authStore.user.id);
+    } else {
+      this.saveLocal();
+    }
   }
 
-  toggleFavorite(id: string) {
+  async toggleFavorite(id: string) {
+    const recipe = this.recipes.find(r => r.id === id);
+    if (!recipe) return;
+    const newStatus = !recipe.isFavorite;
+    
     this.recipes = this.recipes.map(r =>
-      r.id === id ? { ...r, isFavorite: !r.isFavorite } : r
+      r.id === id ? { ...r, isFavorite: newStatus } : r
     );
-    this.save();
+    
+    if (authStore.user) {
+      await supabase.from('recipes').update({ isFavorite: newStatus }).eq('id', id).eq('user_id', authStore.user.id);
+    } else {
+      this.saveLocal();
+    }
   }
 
   getRecipe(id: string): Recipe | undefined {
